@@ -10,10 +10,6 @@ import java.util.Date;
 @Data
 public class EventResponse {
 
-    private String userChannelId;
-
-    private String channel;
-
     @CsvDate(value = "dd/MM/yyyy hh:mm")
     @CsvBindByName(column = "event_start_date")
     private Date startDate;
