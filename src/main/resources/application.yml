@@ -1,6 +1,15 @@
 server:
   port: 9999
 
+spring:
+  servlet:
+    multipart:
+      enabled : true
+      max-file-size : 200MB
+      max-request-size : 215MB
+      file-size-threshold : 2KB
+
+
 logging:
   config: 'classpath:log4j2.xml'
 

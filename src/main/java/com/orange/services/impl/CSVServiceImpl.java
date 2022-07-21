@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URI;
@@ -28,7 +29,6 @@ public class CSVServiceImpl implements CSVService {
     @Override
     public List<EventResponse> getAllEvents() {
 
-        logger.debug("inside getAll events");
         List<EventResponse> allEvents =  new ArrayList<>();
         try {
             URI uri = new URI(eventsDirectory);
@@ -48,14 +48,6 @@ public class CSVServiceImpl implements CSVService {
 
                 // convert `CsvToBean` object to list of events
                 List<EventResponse> events = csvToBean.parse();
-                        /*.stream()
-                        .filter(eventResponse -> eventResponse.getTechMail().equals(request.getUserChannel().getUsername()))
-                        .map(eventResponse -> {
-                            eventResponse.setUserChannelId(request.getUserChannel().getId() + "");
-                            eventResponse.setChannel(request.getChannel().getName());
-                            return eventResponse;
-                        }).collect(Collectors.toList());*/
-
                 logger.debug("events size: " + events.size());
                 allEvents.addAll(events);
             }
@@ -64,5 +56,29 @@ public class CSVServiceImpl implements CSVService {
             logger.debug("can't parse csv file : " + e.getMessage());
             throw new CSVException("can't parse csv file ");
         }
+    }
+
+    @Override
+    public List<EventResponse> getAllEvents(MultipartFile file) {
+        List<EventResponse> allEvents =  new ArrayList<>();
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+            // create csv bean reader
+            CsvToBean<EventResponse> csvToBean = new CsvToBeanBuilder(reader)
+                    .withType(EventResponse.class)
+                    //.withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator(';')
+                    .build();
+
+            // convert `CsvToBean` object to list of events
+            List<EventResponse> events = csvToBean.parse();
+            logger.debug("events size: " + events.size());
+            allEvents.addAll(events);
+        } catch (IOException e) {
+            logger.debug("can't parse csv file : " + e.getMessage());
+            throw new CSVException("can't parse csv file ");
+        }
+        return null;
+
     }
 }
