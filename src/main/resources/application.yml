@@ -1,0 +1,11 @@
+server:
+  port: 9999
+
+logging:
+  config: 'classpath:log4j2.xml'
+
+events:
+  files:
+    #dir: 'http:\\//fs-workspace.kermit-noprod-b.itn.intraorange\gpc\'
+    dir: 'file:///c:/orange/'
+
