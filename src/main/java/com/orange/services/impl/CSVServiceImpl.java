@@ -78,7 +78,7 @@ public class CSVServiceImpl implements CSVService {
             logger.debug("can't parse csv file : " + e.getMessage());
             throw new CSVException("can't parse csv file ");
         }
-        return null;
+        return allEvents;
 
     }
 }
